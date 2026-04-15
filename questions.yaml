@@ -1,0 +1,219 @@
+# Carbon Footprint Quiz — Questions
+#
+# type: choice          → multiple-choice (default if omitted)
+# type: numeric         → user enters a number; CO₂e = value × co2e_per_unit (kg/day)
+# type: household_size  → stores household count; used to divide home-energy questions
+#
+# For choice questions:
+#   uses_household_divisor: true  → option.co2e is divided by state.householdSize at answer time
+#   options[].co2e = household-level kg CO₂e/day (JS divides by household size)
+#
+# For numeric questions:
+#   co2e_per_unit = kg CO₂e/day per 1 unit entered
+#   For flights (annual count): co2e_per_unit = annual_kg_per_RT ÷ 365
+#   hint = helper text shown below the question
+#   unit_label = label shown next to the input (e.g. "bottles / day")
+#
+# action: shown on the "Actions Needed" screen if this is a top-3 impact area
+# Sources: EPA, DEFRA 2023, Poore & Nemecek 2018, IEA, IPCC AR6, Our World in Data
+
+questions:
+  - id: 1
+    text: "How do you usually get to school?"
+    category: "Transport"
+    action: "Try walking, biking, or taking the bus — daily transport choices add up to one of the highest individual impact areas over a school year."
+    options:
+      # EPA school bus: 1,383 g/mi ÷ 40 students × 10 mi × (180/365) ≈ 0.17 kg/day
+      # Solo car: EPA avg 192 g CO₂e/km × 16 km × 0.493 (school days) ≈ 1.52 kg/day
+      # Carpool (2.5 avg): 1.52 ÷ 2.5 ≈ 0.61 kg/day
+      - label: "Walk or bike"
+        score: 1
+        co2e: 0.05
+      - label: "Public bus or train"
+        score: 2
+        co2e: 0.17
+      - label: "Carpool with others"
+        score: 3
+        co2e: 0.61
+      - label: "Driven alone in a car"
+        score: 5
+        co2e: 1.52
+
+  - id: 2
+    text: "What best describes your diet?"
+    category: "Diet"
+    action: "Reducing beef and lamb has the single largest dietary impact. Even two plant-based days a week makes a measurable difference over a year."
+    options:
+      # Poore & Nemecek (2018), Science: food system emissions per diet type
+      - label: "Mostly plant-based (vegan or vegetarian)"
+        score: 1
+        co2e: 1.5
+      - label: "Flexitarian — meat a few times a week"
+        score: 2
+        co2e: 3.0
+      - label: "Meat at most meals"
+        score: 4
+        co2e: 5.0
+      - label: "Beef or lamb every day"
+        score: 5
+        co2e: 7.5
+
+  - id: 3
+    type: numeric
+    text: "On average, how many plastic bottles do you use per day?"
+    category: "Waste"
+    action: "Switching to a reusable water bottle eliminates hundreds of single-use bottles per year — one of the easiest and most visible wins."
+    hint: "Include single-use drink bottles (water, soda, juice). If you use one bottle every 3 days, enter 0.33. Do NOT count soap or shampoo bottles."
+    unit_label: "bottles / day"
+    co2e_per_unit: 0.083
+    # Lifecycle assessment of 500 mL PET bottle: raw materials + production + transport + end-of-life ≈ 83 g CO₂e/bottle
+    max: 20
+
+  - id: 4
+    type: numeric
+    text: "How many iPads / tablets AND computers do you use on a daily basis?"
+    category: "Digital"
+    action: "Power down laptops and tablets fully when not in use — manufacturing and running each device contributes significantly over its lifespan."
+    hint: "Count all of them together (e.g. 1 iPad + 1 laptop = 2). Only count devices you actively use daily."
+    unit_label: "devices"
+    co2e_per_unit: 0.26
+    # Laptop: ~330 kg CO₂e mfg / 4yr lifespan + 30W × 8hr × 0.385 kg/kWh ≈ 0.32 kg/day
+    # iPad: ~180 kg CO₂e mfg / 4yr + 5W × 6hr × 0.385 ≈ 0.14 kg/day  →  avg ≈ 0.26 kg/device/day
+    max: 8
+
+  - id: 5
+    type: numeric
+    text: "How many phones AND gaming systems do you use on a daily basis?"
+    category: "Digital"
+    action: "Gaming consoles draw significant power when active — putting consoles in rest mode rather than leaving them on saves measurable energy."
+    hint: "Count all phones plus all gaming consoles together (e.g. 1 phone + 1 PS5 = 2)."
+    unit_label: "devices"
+    co2e_per_unit: 0.15
+    # Phone: ~70 kg CO₂e mfg / 2.5yr + 1.5W × 24hr × 0.385 ≈ 0.09 kg/day
+    # Console: ~100 kg CO₂e mfg / 7yr + 150W × 3hr × 0.385 ≈ 0.21 kg/day  →  avg ≈ 0.15 kg/device/day
+    max: 8
+
+  - id: 6
+    type: household_size
+    text: "How many people live in your house?"
+    category: "Energy"
+    action: "Household energy is shared — the fewer people sharing it, the larger each person's share of AC, appliances, and heating."
+    hint: "Include yourself. This is used to divide your household's shared energy use (like AC) across all members."
+    unit_label: "people"
+    min: 1
+    max: 12
+
+  - id: 7
+    text: "Do you have air conditioning at home?"
+    category: "Energy"
+    action: "In Hawaiʻi's climate, ceiling fans use roughly 90% less energy than central AC — a significant switch without sacrificing comfort."
+    uses_household_divisor: true
+    options:
+      # Hawaiʻi grid: ~0.75 kg CO₂e/kWh (highest in US, heavy oil dependency — EIA 2023)
+      # Values below are household-level kg CO₂e/day; JS divides by state.householdSize
+      # No AC base load: ~0.50 kg/day HH; occasional window unit adds ~1.30; central daily ~3.70; 24/7 ~6.50
+      - label: "No air conditioning"
+        score: 1
+        co2e: 0.50
+      - label: "Window unit or fan, used occasionally"
+        score: 2
+        co2e: 1.80
+      - label: "Central AC or window units running most days"
+        score: 4
+        co2e: 4.20
+      - label: "Air conditioning running almost 24/7"
+        score: 5
+        co2e: 7.00
+
+  - id: 8
+    type: numeric
+    text: "How many inter-island (Hawaiʻi) flights do you take in a year?"
+    category: "Transport"
+    action: "Even short inter-island flights add up — combining trips or taking the Superferry when possible reduces frequency."
+    hint: "Count round trips. Oahu → Maui → Oahu = 1 round trip."
+    unit_label: "round trips / year"
+    co2e_per_unit: 0.19
+    # HNL–OGG avg ~250 km round trip × 0.255 kg CO₂e/km (DEFRA 2023 domestic) ÷ 365 ≈ 0.19 kg/day per annual RT
+    max: 30
+
+  - id: 9
+    type: numeric
+    text: "How many West Coast — or thereabouts — flights do you take in a year?"
+    category: "Transport"
+    action: "One round trip to the West Coast emits roughly as much CO₂e as two months of daily driving — consolidating trips matters."
+    hint: "Example destinations: Los Angeles, San Francisco, Seattle, Las Vegas, Portland."
+    unit_label: "round trips / year"
+    co2e_per_unit: 4.39
+    # HNL–LAX ~8,200 km RT × 0.195 kg CO₂e/km (DEFRA 2023 long-haul intl economy) = 1,599 kg ÷ 365 ≈ 4.39 kg/day per annual RT
+    max: 10
+
+  - id: 10
+    type: numeric
+    text: "How many East Coast — or thereabouts — flights do you take in a year?"
+    category: "Transport"
+    action: "A single Hawaiʻi–East Coast round trip releases more CO₂e than six months of an average vegetarian diet — reduce frequency where you can."
+    hint: "Example destinations: New York, Boston, Washington D.C., Atlanta, Miami."
+    unit_label: "round trips / year"
+    co2e_per_unit: 8.54
+    # HNL–JFK ~15,980 km RT × 0.195 kg CO₂e/km = 3,116 kg ÷ 365 ≈ 8.54 kg/day per annual RT
+    max: 10
+
+  - id: 11
+    type: numeric
+    text: "How many Asia / Oceania flights do you take in a year?"
+    category: "Transport"
+    action: "Trans-Pacific flights are among the most carbon-intensive trips possible — video calls and longer stays help reduce the frequency."
+    hint: "Example destinations: Japan, South Korea, Philippines, Guam, Australia, New Zealand."
+    unit_label: "round trips / year"
+    co2e_per_unit: 6.94
+    # HNL–NRT avg ~12,700 km RT × 0.195 kg CO₂e/km = 2,477 kg ÷ 365 ≈ 6.79; avg with Oceania ≈ 6.94 kg/day per annual RT
+    max: 10
+
+  - id: 12
+    type: numeric
+    text: "How many South America / Europe flights do you take in a year?"
+    category: "Transport"
+    action: "Hawaiʻi–Europe is one of the longest routes on Earth — each round trip accounts for more than a full month of typical per-person global emissions."
+    hint: "Example destinations: London, Paris, Madrid, Rome, São Paulo, Buenos Aires."
+    unit_label: "round trips / year"
+    co2e_per_unit: 11.51
+    # HNL–LHR ~21,600 km RT × 0.195 kg CO₂e/km = 4,212 kg ÷ 365 ≈ 11.54; avg with S. America ≈ 11.51 kg/day per annual RT
+    max: 6
+
+  - id: 13
+    text: "How do you handle recycling and composting at home?"
+    category: "Waste"
+    action: "Set up a compost bin for food scraps — food waste in landfills produces methane, which is 28× more potent than CO₂ over a 20-year horizon."
+    options:
+      # Landfill methane + missed material-recovery savings (EPA, 8 Billion Trees)
+      - label: "I sort carefully: paper, plastic, glass, and compost food scraps"
+        score: 1
+        co2e: 0.05
+      - label: "I recycle the obvious stuff (bottles, cans)"
+        score: 2
+        co2e: 0.20
+      - label: "I recycle sometimes when it's convenient"
+        score: 3
+        co2e: 0.40
+      - label: "I don't really recycle"
+        score: 5
+        co2e: 0.70
+
+  - id: 14
+    text: "What do you usually do with food leftovers?"
+    category: "Diet"
+    action: "Plan meals and cook in batches — reducing personal food waste by half cuts roughly 100 kg CO₂e per year from production and landfill methane."
+    options:
+      # Food waste: ~2.5 kg CO₂e per kg wasted (production + landfill methane). EPA / Our World in Data.
+      - label: "Always eat leftovers or compost scraps"
+        score: 1
+        co2e: 0.05
+      - label: "Usually save them for later"
+        score: 2
+        co2e: 0.15
+      - label: "Sometimes let them go to waste"
+        score: 3
+        co2e: 0.30
+      - label: "Throw most food away"
+        score: 5
+        co2e: 0.60

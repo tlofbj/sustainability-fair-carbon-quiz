@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Carbon Footprint Quiz{% endblock %}
+
+{% block content %}
+
+<!-- ── Screen 1: Start ─────────────────────────────────── -->
+<div id="screen-start" class="screen active">
+  <div class="card start-card">
+    <p class="app-eyebrow">Sustainability Fair 2025</p>
+    <h1 class="app-title">Carbon Quiz</h1>
+    <p class="app-subtitle">How big is your footprint?</p>
+
+    <div class="form-group">
+      <label class="form-label">Your Anonymous Nickname</label>
+      <div class="name-row">
+        <input type="text" id="input-name" class="clay-input" placeholder="Fantastic Beaver" readonly>
+        <button class="btn btn-secondary" id="btn-generate-name" type="button">Shuffle</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Graduating Class</label>
+      <select id="input-class" class="clay-input class-select">
+        <option value="">— pick yours —</option>
+        <option value="26">'26</option>
+        <option value="27">'27</option>
+        <option value="28">'28</option>
+        <option value="29">'29</option>
+        <option value="30">'30</option>
+        <option value="31">'31</option>
+        <option value="32">'32</option>
+        <option value="33">'33</option>
+        <option value="34">'34</option>
+        <option value="35">'35</option>
+        <option value="36">'36</option>
+        <option value="37">'37</option>
+        <option value="38">'38</option>
+        <option value="39">'39</option>
+        <option value="faculty">Faculty</option>
+        <option value="admin">Admin</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">
+        Email
+        <span class="optional-tag">optional</span>
+      </label>
+      <input type="email" id="input-email" class="clay-input" placeholder="you@iolani.org">
+    </div>
+
+    <button class="btn btn-primary btn-full" id="btn-start">Start Quiz</button>
+  </div>
+</div>
+
+<!-- ── Screen 2: Quiz ─────────────────────────────────── -->
+<div id="screen-quiz" class="screen">
+  <div class="card quiz-card">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progress-bar"></div>
+    </div>
+    <div class="progress-meta">
+      <span id="q-counter" class="q-counter">Question 1 of {{ question_count }}</span>
+      <span id="q-category" class="category-pill"></span>
+    </div>
+
+    <div class="question-area" id="question-area"></div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" id="btn-prev" disabled>Back</button>
+      <button class="btn btn-primary" id="btn-next" disabled>Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Screen 3: Result ───────────────────────────────── -->
+<div id="screen-result" class="screen">
+  <div class="card result-card">
+    <div class="result-identity">
+      <p class="result-name" id="result-name"></p>
+      <span class="tier-badge" id="result-tier"></span>
+    </div>
+
+    <div class="score-hero">
+      <span class="score-number" id="result-score"></span>
+      <span class="score-unit">kg CO₂e / day</span>
+    </div>
+    <p class="score-caption">estimated from your surveyed behaviors</p>
+
+    <div class="metrics-grid" id="metrics-grid"></div>
+
+    <div class="atmosphere-note">
+      <p>CO₂ persists for centuries — roughly 50% for 30+ years, ~20% for over 1,000 years. Methane from meat and food waste lasts ~12 years but traps 28× more heat over a century. <span class="source-tag">IPCC AR6</span></p>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn btn-primary btn-full" id="btn-finalboss">Reveal Final Boss</button>
+      <button class="btn btn-ghost btn-full" id="btn-retake">Retake Quiz</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Screen 4: Final Boss ───────────────────────────── -->
+<div id="screen-finalboss" class="screen">
+  <div class="card finalboss-card">
+    <button class="btn btn-ghost back-inline" id="btn-back-result">← Back</button>
+    <h2 class="section-title">The Bigger Picture</h2>
+    <p class="section-sub">Your footprint matters. Now meet the other players.</p>
+
+    <div class="boss-list" id="boss-list"></div>
+
+    <div class="boss-note">
+      <p>32 companies account for half of all global fossil fuel emissions. <span class="source-tag">Carbon Majors, 2024</span></p>
+      <p class="note-small">Figures include Scope 3 emissions (supply chain and use of sold products) where reported.</p>
+    </div>
+
+    <button class="btn btn-primary btn-full" id="btn-actions">Reveal Actions Needed</button>
+  </div>
+</div>
+
+<!-- ── Screen 5: Actions ──────────────────────────────── -->
+<div id="screen-actions" class="screen">
+  <div class="card actions-card">
+    <button class="btn btn-ghost back-inline" id="btn-back-boss">← Back</button>
+    <h2 class="section-title">What You Can Do</h2>
+    <p class="section-sub">Your top three areas of impact, based on your answers.</p>
+
+    <div class="action-list" id="action-list"></div>
+
+    <hr class="section-divider">
+
+    <h3 class="section-label">Local Organizations</h3>
+    <div class="org-list" id="org-list"></div>
+
+    <hr class="section-divider">
+
+    <h3 class="section-label">Hawaii Legislature</h3>
+    <p class="section-sub-sm">Bills you can follow or submit testimony on at <a href="https://www.capitol.hawaii.gov/" target="_blank" rel="noopener" class="text-link">capitol.hawaii.gov</a>.</p>
+    <div class="bill-list" id="bill-list"></div>
+
+    <div class="actions-footer">
+      <a href="/scoreboard" class="btn btn-primary btn-full">View Scoreboard</a>
+      <button class="btn btn-ghost btn-full" id="btn-retake-2">Take Quiz Again</button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.QUIZ_QUESTIONS = {{ questions | tojson }};
+  window.LOCAL_DATA     = {{ local_data | tojson }};
+</script>
+<script src="/static/app.js"></script>
+{% endblock %}

@@ -1,0 +1,41 @@
+# Local Organizations and Hawaii Legislature Bills
+# Update the bills section each legislative session: capitol.hawaii.gov
+# Organizations: verify URLs are still current before each event
+
+organizations:
+  - name: "Blue Planet Foundation"
+    url: "https://blueplanetfoundation.org/"
+    icon: "⚡"
+    description: "Hawaii's leading clean energy advocate — instrumental in passing the nation's first 100% renewable energy law in 2015."
+
+  - name: "Surfrider Foundation Hawaii"
+    url: "https://hawaii.surfrider.org/"
+    icon: "🌊"
+    description: "Protects Hawaii's coastlines, oceans, and beaches through conservation, education, and grassroots advocacy."
+
+  - name: "Sustainable Coastlines Hawaii"
+    url: "https://www.sustainablecoastlineshawaii.org/"
+    icon: "🏝"
+    description: "Community-driven beach cleanups and sustainability education — 35,000+ volunteers, 40,000+ students reached across the islands."
+
+bills:
+  # Last updated: 2025. Check capitol.hawaii.gov for the current session's active bills.
+  # To submit testimony: visit capitol.hawaii.gov → find bill → click "Submit Testimony"
+
+  - number: "SB 1396"
+    title: "Green Fee Climate Law"
+    url: "https://www.capitol.hawaii.gov/session/measure_indiv.aspx?billtype=SB&billnumber=1396&year=2025"
+    description: "Establishes a climate impact fee on tourism accommodations, generating ~$100M/year for environmental stewardship and climate resilience. Signed into law May 2025."
+    icon: "💚"
+
+  - number: "SB 1024"
+    title: "Zero Emission Transportation"
+    url: "https://www.capitol.hawaii.gov/"
+    description: "Sets a statewide goal to achieve zero emissions across all transportation modes — ground, air, and sea — by 2045."
+    icon: "🚌"
+
+  - number: "HB 2771"
+    title: "Hawaii Healthy Food Incentive"
+    url: "https://www.capitol.hawaii.gov/"
+    description: "Funds a dollar-for-dollar match for SNAP recipients purchasing locally grown fruits and vegetables, strengthening Hawaii's food systems."
+    icon: "🌱"
