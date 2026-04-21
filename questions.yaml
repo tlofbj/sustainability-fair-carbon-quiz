@@ -29,7 +29,7 @@ questions:
       - label: "Walk or bike"
         score: 1
         co2e: 0.05
-      - label: "Public bus or train"
+      - label: "Public transport"
         score: 2
         co2e: 0.17
       - label: "Carpool with others"
